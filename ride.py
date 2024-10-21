@@ -1,13 +1,29 @@
 from datetime import datetime
+from vehicle import Car,Bike
+class RideSharing:
+    def __init__(self,company_name):
+        self.company_name=company_name
+        self.drivers=[]
+        self.riders=[]
+        self.rides=[]
+
+    def add_rider(self,rider):
+        self.riders.append(rider)
+    def add_driver(self,driver):
+        self.drivers.append(driver)
+    def __str__(self):
+        return f"Company name: {self.company_name} with riders: {len(self.riders)} with drivers: {len(self.drivers)}"
+
 class Ride:
-    def __init__(self,start_location,end_location):
+    def __init__(self,start_location,end_location,vehicle):
         self.start_location=start_location
         self.end_location=end_location
         self.driver=None
         self.rider=None
         self.start_time=None
         self.end_time=None
-        self.estimated_fare=None
+        self.estimated_fare=self.calculater_fare(vehicle.vehicle_type)
+        self.vehicle=vehicle
 
     def set_driver(self,driver):
         self.driver=driver
@@ -18,6 +34,17 @@ class Ride:
         self.end_time=datetime.now()
         self.rider.wallet-=self.estimated_fare
         self.driver.wallet+=self.estimated_fare
+
+
+    def calculater_fare(self,vehicle):
+        distance=10
+        fare_per_km={
+            'car':30,
+            'bike':20,
+            'cng':25
+        }
+        return distance*fare_per_km.get(vehicle)
+    
 
     def __repr__(self):
         return f'Ride details:\nStart Location To End Location: {self.start_location} -- {self.end_location}\nEstimate fare: {self.estimated_fare}'
@@ -31,11 +58,15 @@ class RideMatching:
     def __init__(self,drivers):
         self.available_drivers=drivers
     
-    def find_driver(self,ride_request):
+    def find_driver(self,ride_request,vehicle_type):
         if len(self.available_drivers) > 0:
             print("Looking for drivers")
             driver=self.available_drivers[0]
-            ride=Ride(ride_request.rider.start_location,ride_request.end_location)
+            ride=Ride(ride_request.rider.current_location,ride_request.end_location)
+            if vehicle_type=='car':
+                car=Car('car','ABCD56',30)
+            elif vehicle_type=='bike':
+                bike=Bike('bike','ABCD05',15)
             driver.accept_ride(ride)
             return ride
         
