@@ -62,11 +62,12 @@ class RideMatching:
         if len(self.available_drivers) > 0:
             print("Looking for drivers")
             driver=self.available_drivers[0]
-            ride=Ride(ride_request.rider.current_location,ride_request.end_location)
+
             if vehicle_type=='car':
-                car=Car('car','ABCD56',30)
+                vehicle=Car('car','ABCD56',30)
             elif vehicle_type=='bike':
-                bike=Bike('bike','ABCD05',15)
+                vehicle=Bike('bike','ABCD05',15)
+            ride=Ride(ride_request.rider.current_location,ride_request.end_location,vehicle)
             driver.accept_ride(ride)
             return ride
         

@@ -35,6 +35,7 @@ class Rider(User):
         ride_matching=RideMatching(ride_sharing.drivers)
         ride=ride_matching.find_driver(ride_request,vehicle_type)
         # ride=ride_matching.find_driver(ride_request)
+        ride.rider=self
         self.current_ride=ride
         print("Yay!!! We got a ride.")
         
